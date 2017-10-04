@@ -1,0 +1,16 @@
+```{r}
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2017h/mountains"
+mount <- read.table(
+	file = filepath,
+	header = TRUE,
+	col.names = c("height", "prominence", "fail", "success")
+)
+```
+
+```{r}
+glm(
+	cbind(success, fail) ~ height + prominence,
+	data = mount,
+	family = "binomial"
+)
+```

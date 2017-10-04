@@ -34,3 +34,15 @@ library(GGally, quietly = TRUE, warn.conflicts = FALSE)
 
 ```{r child = '04-Task_1d.Rmd'}
 ```
+
+```{r child = '05-Task_2a.Rmd'}
+```
+
+```{r child = '06-Task_2b.Rmd'}
+```
+
+```{r child = '07-Task_2c.Rmd'}
+```
+
+```{r child = '08-Task_2d.Rmd'}
+```

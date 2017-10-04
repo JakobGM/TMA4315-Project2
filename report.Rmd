@@ -1,0 +1,24 @@
+---
+title: "Project 2"
+author: "Sigrid Leithe, Jakob Martinussen, Marte Saghagen"
+date: "October, 2017"
+output: #3rd letter indentation hierarchy
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+#  slidy_presentation:
+#    font_adjustment: +1  
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+#   pdf_document:
+#    toc: true
+#    toc_depth: 2
+#    engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy = TRUE, message = FALSE, warning = FALSE)
+library(ggplot2, quietly = TRUE, warn.conflicts = FALSE)
+library(car, quietly = TRUE, warn.conflicts = FALSE)
+library(GGally, quietly = TRUE, warn.conflicts = FALSE)
+```

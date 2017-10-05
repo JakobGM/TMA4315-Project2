@@ -1,3 +1,6 @@
+# b) Model interpretation
+
+Let us load the dataset:
 ```{r}
 filepath <- "https://www.math.ntnu.no/emner/TMA4315/2017h/mountains"
 mount <- read.table(
@@ -7,10 +10,30 @@ mount <- read.table(
 )
 ```
 
+Now we fit a logit model to the data, using the height and prominence of the mountains as predictors.
+
 ```{r}
-glm(
+fit <- glm(
 	cbind(success, fail) ~ height + prominence,
 	data = mount,
-	family = "binomial"
+	family = binomial(link = "logit")
 )
+summary(fit)
 ```
+
+## Interpretation of the model parameters
+
+We observe that the coefficients for both `height` _and_ `prominence` are negative. This means that the odds for a successful summit _decreases_ as the height/prominence _increases_, which makes sense.
+
+In order to further analyze the model, it is easier to inspect the exponential transform of the coefficients.
+
+```{r}
+odds <- exp(fit$coefficients)
+odds
+```
+
+If the chance of a successful summit of a given mountain has a predicted odds of $\Theta_{odds}$, then an identical mountain except for it being one unit taller (but not any more prominent), has a predicted odds of $`r odds["height"]` \cdot \Theta_{odds}$. Likewise for a change in prominence, but not height, the new predicted odds will be $`r odds["prominence"]` \cdot \Theta_{odds}$.
+
+Here we have ignored the fact that height and prominence are inherently interlinked; changing one will often change the other.
+
+The intercept gives us the odds for a successful summit of a completely flat mountain, $`r odds[1]`$. The model therefore predicts a mountaineer to trip every 90 thousand steps on average, which is not too unreasonable.

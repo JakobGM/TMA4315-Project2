@@ -37,3 +37,21 @@ If the chance of a successful summit of a given mountain has a predicted odds of
 Here we have ignored the fact that height and prominence are inherently interlinked; changing one will often change the other.
 
 The intercept gives us the odds for a successful summit of a completely flat mountain, $`r odds[1]`$. The model therefore predicts a mountaineer to trip every 90 thousand steps on average, which is not too unreasonable.
+
+## Confidence interval of height parameter
+
+We now calculate a 95% confidence interval for the height parameter. This can be easily calculate in R like this,
+
+```{r}
+confint <- confint(
+    fit,
+    parm = c("height"),
+    level = 0.95
+)
+knitr::kable(
+  t(confint),
+  col.names = c("$\\hat{\\beta_L}$", "$\\hat{\\beta_H}$")
+)
+```
+
+We can therefore say with 95% certainty that $\beta_{\text{height}}$ lies within the interval $(\hat{\beta_L}, \hat{\beta_H}) = (`r confint[1]`, `r confint[2]`)$.

@@ -38,6 +38,11 @@ Here we have ignored the fact that height and prominence are inherently interlin
 
 The intercept gives us the odds for a successful summit of a completely flat mountain, $`r odds[1]`$. The model therefore predicts a mountaineer to trip every 90 thousand steps on average, which is not too unreasonable.
 
+## Model parameter significance
+
+The results of the Wald test in the model summary shows that both parameter estimates are well within a significance level of `0.001`, `height` being more significant than `prominence`. There is therefore good reason to believe that both parameters are non-zero.
+The same can be said of the intercept parameter.
+
 ## Confidence interval of height parameter
 
 We now calculate a 95% confidence interval for the height parameter. This can be easily calculate in R like this,

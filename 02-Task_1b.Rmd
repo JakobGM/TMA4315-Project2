@@ -42,6 +42,7 @@ The intercept gives us the odds for a successful summit of a completely flat mou
 
 The results of the Wald test in the model summary shows that both parameter estimates are well within a significance level of `0.001`, `height` being more significant than `prominence`. There is therefore good reason to believe that both parameters are non-zero.
 The same can be said of the intercept parameter.
+All together, we can conclude that the model has explainative power.
 
 ## Confidence interval of height parameter
 
@@ -59,4 +60,4 @@ knitr::kable(
 )
 ```
 
-We can therefore say with 95% certainty that $\beta_{\text{height}}$ lies within the interval $(\hat{\beta_L}, \hat{\beta_H}) = (`r confint[1]`, `r confint[2]`)$.
+We can therefore say with 95% certainty that $\beta_{\text{height}}$ lies within the interval $(\hat{\beta_L}, \hat{\beta_H}) = (`r confint[1]`, `r confint[2]`)$. It is therefore reasonable to conclude that increased `height` and `prominence` has a detrimental effect on the success rate of summits, as the parameter estimate intervals are entirely negative.

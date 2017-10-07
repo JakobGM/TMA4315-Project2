@@ -1,0 +1,30 @@
+# c) Deviance analysis
+
+```{r, echo=FALSE}
+library(ggplot2)
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2017h/mountains"
+mount <- read.table(
+	file = filepath,
+	header = TRUE,
+	col.names = c("height", "prominence", "fail", "success")
+)
+fit <- glm(
+	cbind(success, fail) ~ height + prominence,
+	data = mount,
+	family = binomial(link = "logit")
+)
+```
+
+```{r}
+require(cowplot)
+
+g.height <- ggplot(data = mount) +
+  aes(x = height, y = fit$residuals) + 
+  geom_point(alpha=0.65, color="red") +
+  geom_hline(yintercept = 0)
+g.prominence <- ggplot(data = mount) +
+  aes(x = prominence, y = fit$residuals) + 
+  geom_point(alpha=0.65, color="red") +
+  geom_hline(yintercept = 0)
+plot_grid(g.height, g.prominence, align = "v", axis = "l")
+```

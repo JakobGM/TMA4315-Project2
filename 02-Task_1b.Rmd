@@ -61,3 +61,17 @@ knitr::kable(
 ```
 
 We can therefore say with 95% certainty that $\beta_{\text{height}}$ lies within the interval $(\hat{\beta_L}, \hat{\beta_H}) = (`r confint[1]`, `r confint[2]`)$. It is therefore reasonable to conclude that increased `height` and `prominence` has a detrimental effect on the success rate of summits, as the parameter estimate intervals are entirely negative.
+
+## Interpretation of a confidence interval transformation
+
+The confidence interval can be exponentially transformed: $(\hat{\beta}_L,\hat{\beta}_H) \rightarrow (\exp(\hat{\beta}_L),\exp(\hat{\beta}_H))$.
+
+```{r}
+oddsint <- exp(confint)
+knitr::kable(
+  t(oddsint),
+  col.names = c("$\\exp(\\hat{\\beta_L})$", "$\\exp(\\hat{\\beta_H})$")
+)
+```
+
+Using the same logic as before, we can conclude (with 95% certainty) that increasing the `height` of a mountain by one meter, decreases the chance of a successful summit by `r 100 * (1 - oddsint[2])`% to `r 100 * (1 - oddsint[1])`%.

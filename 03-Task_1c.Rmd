@@ -1,4 +1,7 @@
-# c) Deviance analysis
+# c) Graphical representation of the model
+## Deviance analysis
+
+We now plot the deviance residuals as a function of each covariate `height` and `prominence`, in addition to plotting a smooth trend line to aid in spotting possible trends in the residuals.
 
 ```{r, echo=FALSE}
 library(ggplot2)
@@ -16,15 +19,26 @@ fit <- glm(
 ```
 
 ```{r}
+# Required in order to use plot_grid
 require(cowplot)
 
 g.height <- ggplot(data = mount) +
   aes(x = height, y = fit$residuals) + 
   geom_point(alpha=0.65, color="red") +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0) +
+  geom_smooth()
 g.prominence <- ggplot(data = mount) +
   aes(x = prominence, y = fit$residuals) + 
   geom_point(alpha=0.65, color="red") +
-  geom_hline(yintercept = 0)
+  geom_hline(yintercept = 0) +
+  geom_smooth()
 plot_grid(g.height, g.prominence, align = "v", axis = "l")
 ```
+
+Some observations to be made are:
+* The residuals seem to be approximately distributed with a mean of zero.
+* There seem to be a greater variance in the negative residuals compared to the positive ones.
+* The cluster in the upper, left corner indicates that the smaller/less prominent mountains are generally predicted to have a bit _less_ odds than in reality. The few exceptions when this is _not_ the case, the mountains can be quite _overestimated_ in their odds.
+
+The deviance analysis can not be relied too heavily upon when it comes to assessing model fit, but suffice it to say that these residual plots can not be said to indicate any major problems with the model and its assumptions.
+Additional covariates in the data set would be welcome, as this could lead to better predictions for mountains with less `prominence` / `height`. `slope` of mountain, average `wind` / `temperature`, and number of earlier successful `summits` are example covariates that could explain the data set further.

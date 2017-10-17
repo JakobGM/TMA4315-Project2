@@ -1,0 +1,36 @@
+# Part 2: Poisson regression - Tippeligaen 2016
+
+The aim of this part is to use Poisson regression to estimate the strength of each team in Tippeligaen 2016. This is used to simulate 1000 seasons of tippeligaen and examine the uncertainty of the final ranking. 
+
+```{r}
+filepath <- "https://www.math.ntnu.no/emner/TMA4315/2017h/tippeligaen2016.dat"
+tippeliga <- read.table(file = filepath, header = TRUE, colClasses = c("character", 
+    "character", "numeric", "numeric"))
+```
+
+The data set `tippeliga` contains data from all the matches of Tippeligaen 2016 with the following columns:
+
+* `home`: The name of the home team
+* `away`: The name of the away team
+* `yh`: The score of the home team
+* `ya`: The score of the away team
+
+The league consists of $n = 16$ teams. Each team faces all other teams twice, once as the home team and once as the away team, which gives $n(n-1) = 240$ matches. 
+
+Our model is a simplified version of the model presented in [Lee, 1997](https://www.math.ntnu.no/emner/TMA4315/2017h/Lee1997.pdf). 
+
+## a) Independence of scores
+In order to use Poisson regression, we assume that the score of the home team is independent of the score of the away team. In order to examine this assumption, we create a table containing the frequency of each combination of scores, with the away-scores horizontally and the home-scores vertically. 
+
+```{r}
+scoresTable = table(tippeliga$ya,tippeliga$yh)
+scoresTable
+```
+The independence of the scores are tested using Pearsons $\chi^2$-test of Independence, which examines if there is a significant deviance from the expected frequences assuming independence. 
+```{r}
+chisq.test(scoresTable)
+```
+This gives a p-value of 0.8873, so there is no evidence aganist our assumption of independence. 
+
+
+

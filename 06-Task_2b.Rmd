@@ -1,0 +1,29 @@
+## b) Ranking the teams
+In Tippeligaen a win gives 3 points, a loss gives 0 points and a draw gives 1 point. If two teams have the same number of points the ranking is determined by the goal difference. This is used to produce a ranking from the dataset of match results. 
+```{r}
+ranking <- function(tippeliga){
+scores = data.frame(matrix(0,nrow=16,ncol=1),matrix(0,nrow=16,ncol=1))
+row.names(scores) = tippeliga$home[1:16]
+colnames(scores) = c("Points","GD")
+for(i in 1:240){
+  if(tippeliga$yh[i] > tippeliga$ya[i]){
+    scores[tippeliga$home[i],1] = scores[tippeliga$home[i],1]+3
+  }else if(tippeliga$yh[i] < tippeliga$ya[i]){
+    scores[tippeliga$away[i],1] = scores[tippeliga$away[i],1]+3
+  }else{
+    scores[tippeliga$home[i],1] = scores[tippeliga$home[i],1]+1
+    scores[tippeliga$away[i],1] = scores[tippeliga$away[i],1]+1
+  }
+  scores[tippeliga$home[i],2] = scores[tippeliga$home[i],2] 
+  + tippeliga$yh[i]-tippeliga$ya[i]
+  scores[tippeliga$away[i],2] = scores[tippeliga$away[i],2] 
+  - tippeliga$yh[i]+tippeliga$ya[i]
+}
+scores = scores[order(-scores$Points,-scores$GD),]
+return(scores)
+}
+```
+```{r}
+ranking(tippeliga)
+```
+This is the same results as given in the [Wikipedia article on Tippeligaen 2016](https://en.wikipedia.org/wiki/2016_Tippeligaen). 

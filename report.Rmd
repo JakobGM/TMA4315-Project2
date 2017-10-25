@@ -18,6 +18,9 @@ output: #3rd letter indentation hierarchy
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,tidy = TRUE, message = FALSE, warning = FALSE)
+# Cache code chunks
+knitr::opts_chunk$set(cache=TRUE)
+
 library(ggplot2, quietly = TRUE, warn.conflicts = FALSE)
 library(car, quietly = TRUE, warn.conflicts = FALSE)
 library(GGally, quietly = TRUE, warn.conflicts = FALSE)

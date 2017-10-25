@@ -1,21 +1,22 @@
 ## c) Poisson regression
-We assume that each team has a single parameter measuring their strength, denoted $\beta_{A}$ for team A and so on, and that the number of goals scored by team A when playing team B is Poisson distributed with an logit-link. The intensity is assumed to be determined by the strength of team A, the strength of team B and the home advantage, which is assumed to be independent of which teams are playing. This means that if A is playing against team B, and team A is the home team, the number of goals scored by team A is assumed to be Poisson distributed with mean $\lambda$, where
-$$\ln{\lambda} =\beta_0 + \beta_{home} + \beta_A - \beta_B.$$
-The number of goals scored by team B will have intensity 
-$$\ln{\lambda} =\beta_0 - \beta_A + \beta_B.$$
+We assume that each team has a single parameter measuring their strength, denoted $\beta_{A}$ for team A and so on, and that the number of goals scored by team A when playing against team B is Poisson distributed with a logit-link. The intensity is assumed to be determined by the strength of team A, the strength of team B, and the home advantage, the latter is assumed to be independent of which teams are playing.
+This means that if A is playing against team B, and team A is the home team, the number of goals scored by team A is assumed to be Poisson distributed with mean $\lambda$, where
+$$\ln{\lambda} =\beta_0 + \beta_{\text{home}} + \beta_\text{A} - \beta_\text{B}.$$
+The number of goals scored by team B will have logaritmic intensity 
+$$\ln{\lambda} =\beta_0 - \beta_\text{A} + \beta_\text{B}.$$
 
-Each match contributes with two data points, the number of goals scored by the home team and the number of goals scored by the away team. These numbers are assumed to be independent, and thus we have $2 \cdot n(n-1) = 480$ responses. In order to do the regression, we construct a $480 \times 18$ design matrix `X` with the following coding: 
+Each match contributes two data points, the number of goals scored by the home team and the number of goals scored by the away team. These numbers are assumed to be independent, and thus we have $2n(n-1) = 480$ responses. In order to do the regression, we construct a $480 \times 18$ design matrix `X` with the following coding: 
 
-* $x_{home}$: 1 if the score is for a home team, and 0 if it is for an away team. 
-* $x_A$: 1 if the score is for team A, -1 if team A is the opposing team and 0 otherwise.
+* $x_{\text{home}}$: 1 if the score is for a home team, and 0 if it is for an away team. 
+* $x_\text{A}$: 1 if the score is for team A, -1 if team A is the opposing team and 0 otherwise.
 
 ```{r}
 #Creating the design matrix
 X = matrix(0,nrow=480,ncol=18)
-colnames(X) = c("Intercept","Home",tippeliga$home[1:16])
+colnames(X) = c("Intercept","HomeAdvantage",tippeliga$home[1:16])
 for(i in 1:240){
   #Home:
-  X[i,"Home"] = 1
+  X[i,"HomeAdvantage"] = 1
   X[i,"Intercept"] = 1
   X[i,tippeliga$home[i]] = 1
   X[i,tippeliga$away[i]] = -1
@@ -31,7 +32,7 @@ goals = c(tippeliga$yh,tippeliga$ya)
 
 The column representing Aalesund is removed in order to give a unique solution. Hence, the strength parameter of Aalesund is included in the intercept. 
 
-The maximum likelihood estimates of the betas is found solving $s(\hat \beta) = 0$ numerically using `optim` with `method = "BFGS"`. 
+The maximum likelihood estimates of the betas is found solving the score function $s(\hat \beta) = 0$ numerically using `optim` with `method = "BFGS"`. 
 ```{r,echo=FALSE}
 myglm <- function(formula, data = list(), contrasts = NULL, ...){
   # Extract model matrix & responses
@@ -67,16 +68,24 @@ myglm <- function(formula, data = list(), contrasts = NULL, ...){
   return(est)
 }
 ```
-The ranked strenghts given by this method is
+Since we have set $\beta_{\text{Aalesund}}$ to zero and removed it from the design matrix it must be added manually. The ranked strenghts given by this method is
 ```{r}
 strengths = myglm(goals ~ -1 + X)$coefficients
-strengthsRank = strengths[3:17, , drop= FALSE]
-strengthsRank = strengthsRank[order(-strengthsRank[,1]), ,drop=FALSE]
+
+#Removing Intercept and HomeAdvantage, keep row names
+strengthsRank = strengths[3:17, , drop=FALSE]
+
+#Adding Aalesund
+Aalesund <- matrix(0,nrow=1,ncol=1)
+row.names(Aalesund) = "Aalesund"
+strengthsRank = rbind(strengthsRank,Aalesund)
+
+#Sorting the strenght parameters, keep row names
+strengthsRank = strengthsRank[order(-strengthsRank[,1]), ,drop=FALSE] 
 strengthsRank
 ```
-Since we have set $\beta_{Aalesund}$ to zero, Aalesund lies between Lillestroem and Stabaek. 
 
-Comparing to the ranking in point b), we see that the top three and the bottom team have the same ranking when ranking the estimated strength parameters. In between the teams have changed their positions. This is due to the ranking system in tippeligaen which does not necessarily ensure that a stronger team gets a higher ranking than e weaker team. For instance, a one goal victory gives the same amount of points as a five goal victory in the ranking system, while a five goal victory will boost the strength parameter of a team a lot more than a one goal victory. In the ranking system one goal can change the result of a match and give a team 3 points instead of 1 point. Thus, some goals are a lot more important to the rankings than others. When calculating the strength parameters all goals are equally important. 
+Compared to the ranking in task 2 b), we see that the top three and the bottom team have the same ranking when ordering based on the estimated strength parameters. This is not the case for the rest of the teams. This is due to the ranking system in tippeligaen which does not necessarily ensure that a stronger team gets a higher ranking than a weaker team. For instance, a one goal victory gives the same amount of points as a five goal victory in the ranking system, while a five goal victory will boost the strength parameter of a team a lot more than a one goal victory. In the ranking system one goal can change the result of a match and give a team 3 points instead of 1 point. Thus, some goals are a lot more important to the rankings than others. When calculating the strength parameters all goals are equally important. 
 
 
 The home advantage and intercept is

@@ -23,12 +23,13 @@ for(i in 1:nrow(tippeliga)){
   scores[home,2] = scores[home,2] + yh-ya
   scores[away,2] = scores[away,2] - yh+ya
 }
-scores = scores[order(-scores$Points,-scores$GD),] #Sorting
+scores = scores[order(scores$Points,scores$GD,decreasing = TRUE),] #Sorting
 return(scores)
 }
 ```
 
 ```{r}
 ranking(tippeliga)
+
 ```
 This is the same results as given in the [Wikipedia article on Tippeligaen 2016](https://en.wikipedia.org/wiki/2016_Tippeligaen). 

@@ -21,13 +21,17 @@ knitr::opts_chunk$set(echo = TRUE,tidy = TRUE, message = FALSE, warning = FALSE)
 library(ggplot2, quietly = TRUE, warn.conflicts = FALSE)
 library(car, quietly = TRUE, warn.conflicts = FALSE)
 library(GGally, quietly = TRUE, warn.conflicts = FALSE)
+library(reshape2,quietly = TRUE, warn.conflicts = FALSE)
+library(cowplot,quietly = TRUE, warn.conflicts = FALSE)
 ```
+
 
 ```{r child = '01-Task_1a.Rmd'}
 ```
 
 ```{r child = '02-Task_1b.Rmd'}
 ```
+
 
 ```{r child = '03-Task_1c.Rmd'}
 ```

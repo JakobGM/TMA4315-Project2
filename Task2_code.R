@@ -5,12 +5,14 @@ myglm <- function(formula, data = list(), contrasts = NULL, ...){
   y  <- model.response(mf)
   terms <- attr(mf, "terms")
   
+  #The log-likelihood-function
   ML = function(x){
     MLE = 0
     for(i in 1:length(y)){MLE = MLE +y[i] * t(X[i,]) %*% x-exp(t(X[i,]) %*% x)}
     return(-1*MLE)
   }
   
+  #Maximizing the log-likelihood
   MLE = optim(matrix(0,nrow=17,ncol=1),ML,method = "BFGS")
   betahat = MLE$par
   row.names(betahat) = c("Intercept","Home",tippeliga$home[2:16])
@@ -29,11 +31,12 @@ myglm <- function(formula, data = list(), contrasts = NULL, ...){
   # Return the object with all results
   return(est)
 }
-myglm(goals ~ -1 + X)$coefficients
 
+#Load data set
 filepath <- "https://www.math.ntnu.no/emner/TMA4315/2017h/tippeligaen2016.dat"
 tippeliga <- read.table(file = filepath, header = TRUE, colClasses = c("character", "character", "numeric", "numeric"))
 
+#Create reanking from the results
 ranking <- function(tippeliga){
 scores = data.frame(matrix(0,nrow=16,ncol=1),matrix(0,nrow=16,ncol=1))
 row.names(scores) = tippeliga$home[1:16]
@@ -54,6 +57,7 @@ scores = scores[order(-scores$Points,-scores$GD),]
 return(scores)
 }
 
+#Creating the design matrix
 X = matrix(0,nrow=480,ncol=18)
 colnames(X) = c("Intercept","Home",tippeliga$home[1:16])
 for(i in 1:240){
@@ -73,15 +77,16 @@ goals = c(tippeliga$yh,tippeliga$ya)
 
 summary(glm(goals ~ -1 + X, family = poisson(link=log)))
 
-
-strengths = data.frame(myglm(goals ~ -1 + X)$coefficients)
+#Ranking the strengths
+strengths = myglm(goals ~ -1 + X)$coefficients
 strengthsRank = strengths[3:17, , drop= FALSE]
-strengthsRank
-strengthsRank = strengthsRank[order(-strengthsRank$Estimate), ,drop=FALSE]
-strengthsRank
+strengthsRank = strengthsRank[order(-strengthsRank[,1]), ,drop=FALSE]
 
+
+#Simulation
+rank = ranking(tippeliga)
 rankings = matrix(0,nrow=16,ncol=1000)
-row.names(rankings) = tippeliga$home[1:16]
+row.names(rankings) = row.names(rank)
 
 set.seed(1792)
 betahat = myglm(goals ~ -1 + X)$coefficients
@@ -96,7 +101,14 @@ for(season in 1:1000){
   for(i in 1:16){
     rankings[row.names(tippeliga1scores[i,1,drop=FALSE]),season] = i
   }
-  print(season)
 }
 
-¢
+#Plot simulated results
+g = ggplot(data = melt(rankings),aes(x = value,fill=as.factor(Var1))) + 
+  facet_wrap( ~ as.factor(Var1),ncol=4) +
+  guides(fill=FALSE) +
+  geom_histogram(binwidth=1,center=0,col="white") +
+  scale_x_continuous(breaks=1:16,limits = c(0,17)) +
+  theme(panel.grid.minor.x  = element_blank(),panel.grid.major.x = element_blank())
+g
+

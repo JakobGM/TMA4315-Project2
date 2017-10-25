@@ -10,7 +10,6 @@ The probability of succeeding in ascending a mountain is modelled as a function 
 
 $$\ln\bigg(\frac{\pi_i}{1-\pi_i}\bigg) = \eta_i =  {\bf x}^T_i{\boldsymbol \beta}.$$
 
-
 ## a) Log-likelihood
 The log-likelihood is obtained by first calculating the probability of getting the given ovbservations as a function of the betas,$L(\beta)$, and then taking the logarithm, $\ell(\beta) = \ln L(\beta)$. For this regression the log-likelihood function is
 

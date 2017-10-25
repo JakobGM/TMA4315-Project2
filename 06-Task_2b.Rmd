@@ -2,27 +2,32 @@
 In Tippeligaen a win gives 3 points, a loss gives 0 points and a draw gives 1 point. If two teams have the same number of points the ranking is determined by the goal difference. This is used to produce a ranking from the dataset of match results. 
 ```{r}
 ranking <- function(tippeliga){
-scores = data.frame(matrix(0,nrow=16,ncol=1),matrix(0,nrow=16,ncol=1))
-row.names(scores) = tippeliga$home[1:16]
-colnames(scores) = c("Points","GD")
-for(i in 1:240){
-  if(tippeliga$yh[i] > tippeliga$ya[i]){
-    scores[tippeliga$home[i],1] = scores[tippeliga$home[i],1]+3
-  }else if(tippeliga$yh[i] < tippeliga$ya[i]){
-    scores[tippeliga$away[i],1] = scores[tippeliga$away[i],1]+3
-  }else{
-    scores[tippeliga$home[i],1] = scores[tippeliga$home[i],1]+1
-    scores[tippeliga$away[i],1] = scores[tippeliga$away[i],1]+1
+scores = data.frame(matrix(0,nrow=16,ncol=2))
+row.names(scores) <- tippeliga$home[1:16]
+colnames(scores) <- c("Points","GD") #GD=Goal Difference
+
+for(i in 1:nrow(tippeliga)){
+  home <- tippeliga$home[i]
+  away <- tippeliga$away[i]
+  yh <- tippeliga$yh[i]
+  ya <- tippeliga$ya[i]
+  if(yh > ya){ #Home team wins
+    scores[home,1] = scores[home,1]+3
+  }else if(yh < ya){ #Away team wins
+    scores[away,1] = scores[away,1]+3
+  }else{ #Draw
+    scores[home,1] = scores[home,1]+1
+    scores[away,1] = scores[away,1]+1
   }
-  scores[tippeliga$home[i],2] = scores[tippeliga$home[i],2] 
-  + tippeliga$yh[i]-tippeliga$ya[i]
-  scores[tippeliga$away[i],2] = scores[tippeliga$away[i],2] 
-  - tippeliga$yh[i]+tippeliga$ya[i]
+  #Goal Differences
+  scores[home,2] = scores[home,2] + yh-ya
+  scores[away,2] = scores[away,2] - yh+ya
 }
-scores = scores[order(-scores$Points,-scores$GD),]
+scores = scores[order(-scores$Points,-scores$GD),] #Sorting
 return(scores)
 }
 ```
+
 ```{r}
 ranking(tippeliga)
 ```

@@ -70,6 +70,7 @@ myglm <- function(formula, data = list(), contrasts = NULL, ...){
 ```
 Since we have set $\beta_{\text{Aalesund}}$ to zero and removed it from the design matrix it must be added manually. The ranked strenghts given by this method is
 ```{r}
+#The source code for myglm can be found in the appendix
 strengths = myglm(goals ~ -1 + X)$coefficients
 
 #Removing Intercept and HomeAdvantage, keep row names

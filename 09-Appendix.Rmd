@@ -1,0 +1,38 @@
+# Appendix
+
+## Source code for `myglm`-function. 
+```{r,eval=FALSE}
+myglm <- function(formula, data = list(), contrasts = NULL, ...){
+  # Extract model matrix & responses
+  mf <- model.frame(formula = formula, data = data)
+  X  <- model.matrix(attr(mf, "terms"), data = mf, contrasts.arg = contrasts)
+  y  <- model.response(mf)
+  terms <- attr(mf, "terms")
+  
+  #The log-likelihood-function
+  ML = function(x){
+    MLE = 0
+    for(i in 1:length(y)){MLE = MLE +y[i] * t(X[i,]) %*% x-exp(t(X[i,]) %*% x)}
+    return(-1*MLE)
+  }
+  
+  #Maximizing the log-likelihood
+  MLE = optim(matrix(0,nrow=17,ncol=1),ML,method = "BFGS")
+  betahat = MLE$par
+  row.names(betahat) = c("Intercept","Home",tippeliga$home[2:16])
+  colnames(betahat) = "Estimate"
+  
+  est <- list(terms = terms, model = mf)
+  
+  # Store call and formula used
+  est$call <- match.call()
+  est$formula <- formula
+  est$coefficients <- betahat
+  
+  # Set class name. This is very important!
+  class(est) <- 'myglm'
+  
+  # Return the object with all results
+  return(est)
+}
+```

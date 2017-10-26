@@ -57,3 +57,6 @@ knitr::opts_chunk$set(tidy = TRUE)
 
 ```{r child = '08-Task_2d.Rmd'}
 ```
+
+```{r child = '09-Appendix.Rmd'}
+```

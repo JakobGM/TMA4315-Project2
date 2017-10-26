@@ -8,7 +8,13 @@ row.names(rankings) = row.names(ranking(tippeliga))
 set.seed(1792)
 betahat = myglm(goals ~ -1 + X)$coefficients
 for(season in 1:1000){
-  tippeligaSim = data.frame(tippeliga$home,tippeliga$away,matrix(0,nrow=240,ncol=1),matrix(0,nrow=240,ncol=1),stringsAsFactors=FALSE)
+  tippeligaSim = data.frame(
+    tippeliga$home,
+    tippeliga$away,
+    matrix(0,nrow=240,ncol=1),
+    matrix(0,nrow=240,ncol=1),
+    stringsAsFactors=FALSE
+  )
   colnames(tippeligaSim) = c("home","away","yh","ya")
   for(i in 1:240){
     tippeligaSim$yh[i] = rpois(1,lambda = exp(t(X[i,]) %*% betahat))
@@ -27,7 +33,7 @@ g = ggplot(data = melt(rankings),aes(x = value,fill=as.factor(Var1))) +
   geom_histogram(binwidth=1,center=0,col="white") +
   theme_fivethirtyeight() + 
   theme(panel.grid.minor.x  = element_blank(),panel.grid.major.x = element_blank()) + 
-  theme(strip.text = element_text(size=16))
+  theme(strip.text = element_text(size=16)) +
   scale_x_continuous(breaks=1:16,limits = c(0,17))
 g
 ```

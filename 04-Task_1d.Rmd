@@ -1,4 +1,4 @@
-## d) 
+## d) Predictions of unfitted mountains
 
 We now try to predict the probability of successfully ascending Mount Everest. 
 
@@ -53,7 +53,10 @@ knitr::kable(
 )
 ```
 
-The predicted probability of a successfull summit is rather slim. Even the most optimistic prediction gives us a probability of `r probhigh*100` %. Since Mount Everst is a data point that is well outside the domain of the fitted data, the models prediction can not be truste in this case. The observed probability of the successfull summit of Mount Everst is `r 145/(145+122)`, according to *List of highest mountains* (https://en.wikipedia.org/wiki/List_of_highest_mountains_on_Earth).
+```{r,echo=FALSE}
+```
+
+The predicted probability of a successfull summit is rather slim. Even the most optimistic prediction gives us a probability of `r MEprobint[2]*100` %. Since Mount Everst is a data point that is well outside the domain of the fitted data, the models prediction can not be truste in this case. The observed probability of the successfull summit of Mount Everst is `r 145/(145+122)`, according to [__List of highest mountains__](https://en.wikipedia.org/wiki/List_of_highest_mountains_on_Earth).
 The prediction is too pessimistic, caused by an overextrapolation of the original fitted data. 
 
 We now preform the same prediction for the mountain Chogolisa.
@@ -73,7 +76,10 @@ knitr::kable(
   col.names = c("$\\pi_L$", "$\\pi_H$")
 )
 ```
-The predicted probability of `r CProb*100` % is still too pessimistic compared to the observed probability of `r 20/22*100` % retrived from *List of highest mountains* (https://en.wikipedia.org/wiki/List_of_highest_mountains_on_Earth). Even the 95 % prediction interval does not contain the observed value. Under the assumption that the predicted probability is true, the observations are quite unlikely. 
+
+```{r,echo=FALSE}
+```
+The predicted probability of `r CProb*100` % is still too pessimistic compared to the observed probability of `r 20/22*100` % retrived from [__List of highest mountains__](https://en.wikipedia.org/wiki/List_of_highest_mountains_on_Earth). Even the 95 % prediction interval does not contain the observed value. Under the assumption that the predicted probability is true, the observations are quite unlikely. 
 ```{r}
 pbinom(prob = CProb, size = 22, q = 20, lower.tail = FALSE)
 ```

@@ -7,13 +7,13 @@ output: #3rd letter indentation hierarchy
 ###    incremental: true # or >* for one at a time
 #  slidy_presentation:
 #    font_adjustment: +1  
-  prettydoc::html_pretty:
-    theme: architect
-    highlight: github
-#   pdf_document:
-#    toc: true
-#    toc_depth: 2
-#    engine: xelatex
+#  prettydoc::html_pretty:
+#    theme: architect
+#    highlight: github
+   pdf_document:
+    toc: true
+    toc_depth: 2
+    latex_engine: xelatex
 ---
 
 ```{r setup, include=FALSE}

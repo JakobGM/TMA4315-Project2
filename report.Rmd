@@ -17,7 +17,7 @@ output: #3rd letter indentation hierarchy
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,tidy = TRUE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE,tidy = FALSE, message = FALSE, warning = FALSE)
 # Cache code chunks
 knitr::opts_chunk$set(cache=TRUE)
 
@@ -26,6 +26,7 @@ library(car, quietly = TRUE, warn.conflicts = FALSE)
 library(GGally, quietly = TRUE, warn.conflicts = FALSE)
 library(reshape2,quietly = TRUE, warn.conflicts = FALSE)
 library(cowplot,quietly = TRUE, warn.conflicts = FALSE)
+library(ggthemes,quietly = TRUE, warn.conflicts = FALSE)
 ```
 
 
@@ -35,11 +36,14 @@ library(cowplot,quietly = TRUE, warn.conflicts = FALSE)
 ```{r child = '02-Task_1b.Rmd'}
 ```
 
-
 ```{r child = '03-Task_1c.Rmd'}
 ```
 
 ```{r child = '04-Task_1d.Rmd'}
+```
+
+```{r setup2, include=FALSE}
+knitr::opts_chunk$set(tidy = TRUE)
 ```
 
 ```{r child = '05-Task_2a.Rmd'}

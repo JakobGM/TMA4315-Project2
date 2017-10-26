@@ -1,0 +1,80 @@
+## d) 
+
+We now try to predict the probability of successfully ascending Mount Everest. 
+
+```{r}
+ME <- data.frame(height = 8848, prominence = 8848)
+MEProb <- predict(fit, type="response", newdata=ME)
+MEProb
+```
+
+### Confidence interval for probability
+
+The asymtotic distribution of the MLE, $\hat \beta$, is 
+
+$$ 
+\hat \beta \approx N_p(\beta,F^{-1}(\beta)).
+$$
+This implies that the distribution of the linear predictor, $\eta_i = x_i^T \hat \beta$, is as follows
+
+This means that the linear predictor, $\eta_i = x_i^T\beta$ has the asymptotic distribution
+$$
+\eta_i \approx N_p(x_i^T\beta,x_iF^{-1}(\beta)x_i^T). 
+$$
+
+Using this distribution we now construct a  $1 -\alpha$ confidence interval for the linear predictior
+$$ 
+P(x_i^T\hat \beta-z_{\alpha/2}\sqrt{b_{ii}(\hat{\beta})}
+\le \eta_i \le x_i^T\hat\beta+z_{\alpha/2}\sqrt{b_{ii}(\hat{\beta})})=1-\alpha 
+$$
+where $b_{ii}(\beta)$ is the diagonal element $i$ of the matrix ${\bf B}(\beta) = x_iF^{-1}(\beta)x_i^T$.
+
+We now calculate the 95 % confidence interval of the probability of a successfull summit of Mount Everest. 
+```{r}
+predint <- function(height, prominence, alpha){
+  mountain <- data.frame(height = height, prominence = prominence)
+  prediction <- predict(fit, newdata = mountain, type = 'link', se.fit =TRUE)
+  low <- prediction$fit - qnorm(1 - alpha/2) * prediction$se.fit
+  high <- prediction$fit + qnorm(1 - alpha/2) * prediction$se.fit
+  
+  problow <- exp(low) / (1 + exp(low))
+  probhigh <- exp(high) / (1 + exp(high))
+  return(c(problow, probhigh))
+}
+
+alpha <- 0.05
+height <- 8848
+prominence <- 8848
+MEprobint <- predint(height, prominence, alpha)
+
+knitr::kable(
+  t(MEprobint),
+  col.names = c("$\\pi_L$", "$\\pi_H$")
+)
+```
+
+The predicted probability of a successfull summit is rather slim. Even the most optimistic prediction gives us a probability of `r probhigh*100` %. Since Mount Everst is a data point that is well outside the domain of the fitted data, the models prediction can not be truste in this case. The observed probability of the successfull summit of Mount Everst is `r 145/(145+122)`, according to *List of highest mountains* (https://en.wikipedia.org/wiki/List_of_highest_mountains_on_Earth).
+The prediction is too pessimistic, caused by an overextrapolation of the original fitted data. 
+
+We now preform the same prediction for the mountain Chogolisa.
+```{r}
+alpha <- 0.05
+height <- 7665
+prominence <- 1624
+
+C <- data.frame(height = height, prominence = prominence)
+CProb <- predict(fit, type = "response", newdata = C)
+CProb
+
+Cprobint <- predint(height, prominence, alpha)
+
+knitr::kable(
+  t(Cprobint),
+  col.names = c("$\\pi_L$", "$\\pi_H$")
+)
+```
+The predicted probability of `r CProb*100` % is still too pessimistic compared to the observed probability of `r 20/22*100` % retrived from *List of highest mountains* (https://en.wikipedia.org/wiki/List_of_highest_mountains_on_Earth). Even the 95 % prediction interval does not contain the observed value. Under the assumption that the predicted probability is true, the observations are quite unlikely. 
+```{r}
+pbinom(prob = CProb, size = 22, q = 20, lower.tail = FALSE)
+```
+In other words, the model seems to be inaccurate, even for data points well within the original fitted data domain. 

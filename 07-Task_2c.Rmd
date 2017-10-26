@@ -85,10 +85,10 @@ strengthsRank = strengthsRank[order(-strengthsRank[,1]), ,drop=FALSE]
 strengthsRank
 ```
 
-Compared to the ranking in task 2 b), we see that the top three and the bottom team have the same ranking when ordering based on the estimated strength parameters. This is not the case for the rest of the teams. This is due to the ranking system in tippeligaen which does not necessarily ensure that a stronger team gets a higher ranking than a weaker team. For instance, a one goal victory gives the same amount of points as a five goal victory in the ranking system, while a five goal victory will boost the strength parameter of a team a lot more than a one goal victory. In the ranking system one goal can change the result of a match and give a team 3 points instead of 1 point. Thus, some goals are a lot more important to the rankings than others. When calculating the strength parameters all goals are equally important. 
+Compared to the ranking in task 2 b), we see that the top three and the bottom team have the same ranking when ordering based on the estimated strength parameters. This is not the case for the rest of the teams, which may be due to the ranking system in tippeligaen, which does not necessarily ensure that a stronger team gets a higher ranking than a weaker team. For instance, a one-goal-victory gives the same number of points as a five-goal-victory in the ranking system, while a five-goal-victory will boost the strength parameter of a team a lot more than a one-goal-victory. In the ranking system, one goal can change the result of a match and give a team 3 points instead of 1. Thus, some goals are a lot more important to the league rankings than others. When calculating the strength parameters all goals are equally important. 
 
 
-The home advantage and intercept is
+The home advantage and intercept are
 ```{r}
 strengths[1:2,1,drop=FALSE]
 ```

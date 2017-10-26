@@ -1,6 +1,6 @@
 ## d) Simulation 
-In order to investigate the variance in the expected results and find out if the winner really was the best team we simulate 1000 seasons of tippeligaen based on the estimated parameters in point c). The results are displayed in a histogram, sorted based on their position in Tippeligaen 2016. 
-```{r}
+In order to investigate the variance in the expected results and find out if the winning team really was the bes we simulate 1000 seasons of tippeligaen based on the estimated parameters in point c). The results are displayed in a histogram, sorted based on their position in Tippeligaen 2016. 
+```{r,echo=TRUE,display=FALSE,fig2, fig.height = 10, fig.width = 10, fig.align = "center"}
 #Simulation
 rankings = matrix(0,nrow=16,ncol=1000)
 row.names(rankings) = row.names(ranking(tippeliga))
@@ -8,32 +8,36 @@ row.names(rankings) = row.names(ranking(tippeliga))
 set.seed(1792)
 betahat = myglm(goals ~ -1 + X)$coefficients
 for(season in 1:1000){
-  tippeliga1 = data.frame(tippeliga$home,tippeliga$away,matrix(0,nrow=240,ncol=1),matrix(0,nrow=240,ncol=1),stringsAsFactors=FALSE)
-  colnames(tippeliga1) = c("home","away","yh","ya")
+  tippeligaSim = data.frame(tippeliga$home,tippeliga$away,matrix(0,nrow=240,ncol=1),matrix(0,nrow=240,ncol=1),stringsAsFactors=FALSE)
+  colnames(tippeligaSim) = c("home","away","yh","ya")
   for(i in 1:240){
-    tippeliga1$yh[i] = rpois(1,lambda = exp(t(X[i,]) %*% betahat))
-    tippeliga1$ya[i] = rpois(1,lambda = exp(t(X[i+240,]) %*% betahat))
+    tippeligaSim$yh[i] = rpois(1,lambda = exp(t(X[i,]) %*% betahat))
+    tippeligaSim$ya[i] = rpois(1,lambda = exp(t(X[i+240,]) %*% betahat))
   }
-  tippeliga1scores = ranking(tippeliga1)
+  tippeligaSimScores = ranking(tippeligaSim)
   for(i in 1:16){
-    rankings[row.names(tippeliga1scores[i,1,drop=FALSE]),season] = i
+    rankings[row.names(tippeligaSimScores[i,1,drop=FALSE]),season] = i
   }
 }
 
 #Plot simulated results
 g = ggplot(data = melt(rankings),aes(x = value,fill=as.factor(Var1))) + 
-  facet_wrap( ~ as.factor(Var1),ncol=4) +
+  facet_wrap( ~ as.factor(Var1),ncol=4,strip.position = "bottom") +
   guides(fill=FALSE) +
   geom_histogram(binwidth=1,center=0,col="white") +
-  scale_x_continuous(breaks=1:16,limits = c(0,17)) +
-  theme(panel.grid.minor.x  = element_blank(),panel.grid.major.x = element_blank())
+  theme_fivethirtyeight() + 
+  theme(panel.grid.minor.x  = element_blank(),panel.grid.major.x = element_blank()) + 
+  theme(strip.text = element_text(size=16))
+  scale_x_continuous(breaks=1:16,limits = c(0,17))
 g
 ```
+
 Here, Rosenborg has a win rate of 
 ```{r}
-sum(rankings["Rosenborg",]==1)/1000
+rate <- sum(rankings["Rosenborg",]==1)/1000
+rate
 ```
-This means that with the given strengths Rosenborg would win 89.5 % of the seasons, while Brann would win 5 % and Odd 1.6 %. Thus, we can safely conclude that Rosenborg is truly the best team. Start has a loss rate of 84.1 % and is clearly the weakest team. 
+This means that with the given strengths Rosenborg would win `r rate` % of the seasons, while Brann would win 5 % and Odd 1.6 %. Thus, we can safely conclude that Rosenborg is truly the best team. Start has a loss rate of 84.1 % and is clearly the weakest team. 
 
 In the middle of the ranking there are few points distinguishing the teams and the distributions are very similar. According to this model there seems to be only coincidences, and nor team strength, determining where Sarpsborg_08 places between 4th place or 14th place, since the distribution is almost uniform. Fourth place would give qualification to Europa League, while 14th place could result in relegation. 
 

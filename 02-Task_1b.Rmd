@@ -1,4 +1,4 @@
-# b) Model interpretation
+## b) Model interpretation
 
 Let us load the dataset:
 ```{r}
@@ -21,7 +21,7 @@ fit <- glm(
 summary(fit)
 ```
 
-## Interpretation of the model parameters
+### Interpretation of the model parameters
 
 We observe that the coefficients for both `height` _and_ `prominence` are negative. This means that the odds for a successful summit _decreases_ as the height/prominence _increases_, which makes sense.
 
@@ -36,17 +36,17 @@ If the chance of a successful summit of a given mountain has a predicted odds of
 
 Here we have ignored the fact that height and prominence are inherently interlinked; changing one will often change the other.
 
-The intercept gives us the odds for a successful summit of a completely flat mountain, $`r odds[1]`$. The model therefore predicts a mountaineer to trip every 90 thousand steps on average, which is not too unreasonable.
+The intercept gives us the odds for a successful summit of a completely flat mountain, $`r odds[1]`$. This is however way outside the reasonable domain of our model. 
 
-## Model parameter significance
+### Model parameter significance
 
 The results of the Wald test in the model summary shows that both parameter estimates are well within a significance level of `0.001`, `height` being more significant than `prominence`. There is therefore good reason to believe that both parameters are non-zero.
 The same can be said of the intercept parameter.
 All together, we can conclude that the model has explainative power.
 
-## Confidence interval of height parameter
+### Confidence interval of height parameter
 
-We now calculate a 95% confidence interval for the height parameter. This can be easily calculate in R like this,
+We now calculate a 95% confidence interval for the height parameter. This can be easily calculated in R like this,
 
 ```{r}
 confint <- confint(
@@ -62,7 +62,7 @@ knitr::kable(
 
 We can therefore say with 95% certainty that $\beta_{\text{height}}$ lies within the interval $(\hat{\beta_L}, \hat{\beta_H}) = (`r confint[1]`, `r confint[2]`)$. It is therefore reasonable to conclude that increased `height` and `prominence` has a detrimental effect on the success rate of summits, as the parameter estimate intervals are entirely negative.
 
-## Interpretation of a confidence interval transformation
+### Interpretation of a confidence interval transformation
 
 The confidence interval can be exponentially transformed: $(\hat{\beta}_L,\hat{\beta}_H) \rightarrow (\exp(\hat{\beta}_L),\exp(\hat{\beta}_H))$.
 

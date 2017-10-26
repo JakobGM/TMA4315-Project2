@@ -11,12 +11,12 @@ The probability of succeeding in ascending a mountain is modelled as a function 
 $$\ln\bigg(\frac{\pi_i}{1-\pi_i}\bigg) = \eta_i =  {\bf x}^T_i{\boldsymbol \beta}.$$
 
 ## a) Log-likelihood
-The log-likelihood is obtained by first calculating the probability of getting the given ovbservations as a function of the betas,$L(\beta)$, and then taking the logarithm, $\ell(\beta) = \ln L(\beta)$. For this regression the log-likelihood function is
+The log-likelihood is obtained by first calculating the probability of getting the given ovbservations as a function of the betas, $L(\beta)$, and then taking the logarithm, $\ell(\beta) = \ln L(\beta)$. For this regression the log-likelihood function is
 
 
 $$\ell(\beta) = \sum_{i=1}^n [y_i {\bf x}_i^T - \ln(1-\text{exp}({\bf x}^T_i\beta))].$$
 
-In order to obtain the maximum likelihood estimates of the parameters in $\beta$ we derivate with respect to the elements of the $\beta$ vector, which gives os the score function
+In order to obtain the maximum likelihood estimates of the parameters in $\beta$ we derivate with respect to the elements of the $\beta$ vector, which results in the score function
 
 $$s(\beta)=\frac{\partial l(\beta)}{\partial \beta}=\sum_{i=1}^n \frac{\partial l_i(\beta)}{\partial \beta} = \sum_{i=1}^n {\bf x}_i(y_i - \frac{\exp({\bf x}_i^T\beta)}{1+\exp({\bf x}_i^T\beta)}).$$
 

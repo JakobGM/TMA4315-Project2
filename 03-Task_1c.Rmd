@@ -1,5 +1,5 @@
-# c) Graphical representation of the model
-## Deviance analysis
+## c) Graphical representation of the model
+### Deviance analysis
 
 We now plot the deviance residuals as a function of each covariate `height` and `prominence`, in addition to plotting a smooth trend line to aid in spotting possible trends in the residuals.
 
@@ -36,15 +36,16 @@ plot_grid(g.height, g.prominence, align = "v", axis = "l")
 ```
 
 Some observations to be made are:
+
 * The residuals seem to be approximately distributed with a mean of zero.
 * There seem to be a greater variance in the negative residuals compared to the positive ones.
 * The cluster in the upper, left corner indicates that the smaller/less prominent mountains are generally predicted to have a bit _less_ odds than in reality. The few exceptions when this is _not_ the case, the mountains can be quite _overestimated_ in their odds.
 
 The deviance analysis can not be relied too heavily upon when it comes to assessing model fit, but suffice it to say that these residual plots can not be said to indicate any major problems with the model and its assumptions.
-Additional covariates in the data set would be welcome, as this could lead to better predictions for mountains with less `prominence` / `height`. `slope` of mountain, average `wind` / `temperature`, and number of earlier successful `summits` are example covariates that could explain the data set further.
+Additional covariates in the data set would be welcome, as this could lead to better predictions for mountains with less `prominence` / `height`. Slope of mountain, average wind/temperature, and number of earlier successful summits are example covariates that could explain the data set further.
 
-## Estimated probabilites
-
+### Estimated probabilites
+We now plot the estimated probability as a function of `height` and `prominence`.
 ```{r}
 n <- 100
 
@@ -57,9 +58,16 @@ df$probability <- predict(fit, type="response", newdata=df)
 g <- ggplot(data = df, aes(x = height, y = prominence, z = probability)) +
   geom_raster(aes(fill = probability)) +
   scale_fill_gradientn(
-    colours = terrain.colors(10),
+    colours = rev(terrain.colors(10)),
     limits = c(min(df$probability), max(df$probability))
   ) +
-  geom_contour(col = "white")
+  geom_contour(col = "white") +
+  coord_cartesian(
+    xlim = c(min(mount$height), max(mount$height)),
+    ylim = c(min(mount$prominence), max(mount$prominence))
+  )
 g
 ```
+
+We can now visually confirm, by inspecting the contour lines, that the height of a mountain has a greater negative impact on the odds of a successfull summit relative to the prominence of a mountain. Height may have a bigger impact because it is more directly related to such adverse factors as climate, temperature, wind, and oxygen content in the air. 
+
